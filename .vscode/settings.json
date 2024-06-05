@@ -12,6 +12,7 @@
         "array": "cpp",
         "deque": "cpp",
         "vector": "cpp",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "queue": "cpp"
     }
 }

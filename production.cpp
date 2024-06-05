@@ -2,7 +2,8 @@
 
 void parseStringToProductions(string line)
 {
-    string left = line.substr(0, 1);
+    int pos1 = line.find("->");
+    string left = line.substr(0, pos1);
     if (line.find("->") != string::npos)
     {
         int pos = line.find("->") + string("->").length();
@@ -29,9 +30,32 @@ void parseStringToProductions(string line)
         {
             production production_temp;
             production_temp.left = left;
-            for (char c : p_t)
+            for (int i = 0; i < p_t.size(); i++)
             {
-                production_temp.right.push_back(string(1, c));
+                char c = p_t[i];
+                int setFlag = false;
+                int setLen = 1;
+                string setElement = "";
+                for (string le : productionLefts)
+                {
+                    int findPos = p_t.find(le);
+                    if (findPos != string::npos && findPos == i)
+                    {
+                        setFlag = true;
+                        setLen = le.size();
+                        setElement = le;
+                        break;
+                    }
+                }
+                if (setFlag)
+                {
+                    i = i + setLen - 1;
+                    production_temp.right.push_back(setElement);
+                }
+                else
+                {
+                    production_temp.right.push_back(string(1, c));
+                }
             }
             production_temp.right2 = rights;
             productions.push_back(production_temp);
@@ -48,6 +72,64 @@ void parseStringToProductions(string line)
 // 读入模块函数
 void readProductions(string fileName)
 {
+    // 构建buildProductionLefts
+    buildProductionLefts(fileName);
+
+    vector<string> lines;
+    ifstream ifs(fileName);
+
+    while (!ifs.eof())
+    {
+        char temp[BUFFER_SIZE];
+        ifs.getline(temp, BUFFER_SIZE);
+        string line(temp);
+        lines.push_back(line);
+    }
+
+    // 添加拓展文法
+    string externProduction = "S'->" + lines[0].substr(0, lines[0].find("->")) + "$";
+    productionLefts.insert("S'");
+
+    lines.push_back("");
+    for (int i = lines.size() - 1; i >= 1; i--)
+    {
+        lines[i] = lines[i - 1];
+    }
+    lines[0] = externProduction;
+
+    // 开始处理
+    for (string line : lines)
+    {
+        if (line.empty())
+        {
+            break;
+        }
+        parseStringToProductions(line);
+    }
+
+    // 展示所有读入的文法
+    for (int i = 0; i < productions.size(); i++)
+    {
+        production p_t = productions[i];
+        cout << "single splite line: " << p_t.left << " -> " << p_t.rightToString() << endl;
+        for (int j = 0; j < p_t.right.size(); j++)
+        {
+            cout << p_t.left << "的:" << j << "-> β_j_item is: " << p_t.right[j] << endl;
+        }
+    }
+}
+
+// 构建所有的文法左部
+void buildProductionLefts(string fileName)
+{
+    // 旧写法，根据读入结果
+    // for (int i = 0; i < productions.size(); i++)
+    // {
+    //     productionLefts.insert(productions[i].left);
+    // }
+
+    // 新写法
+    // 读入所有行
     vector<string> lines;
     ifstream ifs(fileName);
 
@@ -60,20 +142,25 @@ void readProductions(string fileName)
     }
 
     // 开始处理
+    // productionLefts
+    cout << "开始构建左部集合：" << endl;
     for (string line : lines)
     {
-        parseStringToProductions(line);
+        if (line.find("->") != string::npos)
+        {
+            int pos = line.find("->");
+            productionLefts.insert(line.substr(0, pos));
+        }
     }
+
+    for (string p : productionLefts)
+    {
+        cout << p << endl;
+    }
+    cout << "左部end" << endl;
+    ifs.close();
 }
 
-// 构建所有的文法左部
-void buildProductionLefts()
-{
-    for (int i = 0; i < productions.size(); i++)
-    {
-        productionLefts.insert(productions[i].left);
-    }
-}
 // 可以为空 的 文法左部
 void buildNullAble()
 {
@@ -121,6 +208,7 @@ void buildNullAble()
     {
         cout << p << endl;
     }
+    cout << "空集合结束" << endl;
 }
 // 建立first和follow集合
 void buildFirst()
@@ -266,7 +354,7 @@ void buildSplitedIndex()
     for (int i = 0; i < productions.size(); i++)
     {
         // 定义索引从1开始
-        SplitedIndex[productions[i].left][productions[i].rightToString()] = i + 1;
+        SplitedIndex[productions[i].left][productions[i].rightToString()] = i;
         cout << productions[i].left << " \t " << productions[i].rightToString() << ":" << i + 1 << endl;
     }
 }
@@ -304,7 +392,7 @@ void buildFirst_sSet()
                 {
                     // 如果为空，还是需要往后找，不退出
                     // 为了观察把，空符号补全
-                    first_sSet[index].insert(b);
+                    // first_sSet[index].insert(b);
                 }
                 else
                 {
@@ -331,4 +419,50 @@ void buildFirst_sSet()
              << "的select集合为："
              << setToString(first_sSet[index]) << endl;
     }
+}
+
+set<string> getSelectSet(vector<string> betas, set<string> a, string left)
+{
+    set<string> ret;
+    // 如果是集合
+    for (int i = 0; i < betas.size(); i++)
+    {
+        string beta = betas[i];
+        if (productionLefts.find(beta) != productionLefts.end())
+        {
+            // 添加右部的frist
+            ret.insert(firstSet[beta].begin(), firstSet[beta].end());
+            // 如果b文法永远不空
+            if (NullAble.find(beta) == NullAble.end())
+            {
+                return ret;
+            }
+            else
+            {
+                // 如果为空的话，需要下一轮循环，找到下一个b符号进行补充
+            }
+        }
+        else // 普通单词
+        {
+            if (beta == CEIGEMA)
+            {
+                // 如果为空，还是需要往后找，不退出
+                // 为了观察把，空符号补全
+                // ret.insert(beta);
+            }
+            else
+            {
+                ret.insert(beta);
+                return ret; // 进入下一个文法
+            }
+        }
+    }
+    // 如果betas部分都可以是空
+    ret.insert(a.begin(), a.end());
+    // 如果a自己也是空
+    if (a.empty())
+    {
+        ret.insert(followSet[left].begin(), followSet[left].end());
+    }
+    return ret;
 }

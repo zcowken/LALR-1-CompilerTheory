@@ -45,7 +45,7 @@ unordered_map<string, set<string>> firstSet;
 unordered_map<string, set<string>> followSet;
 
 // 索引表 -- 分割后的索引
-// 定义索引从1开始
+// 定义索引从0开始
 unordered_map<string, unordered_map<string, int>> SplitedIndex;
 unordered_map<int, set<string>> first_sSet;
 
@@ -56,7 +56,7 @@ void readProductions(string fileName);
 void parseStringToProductions(string line);
 
 // 构建所有的文法左部
-void buildProductionLefts();
+void buildProductionLefts(string fileName);
 // 可以为空 的 文法左部
 void buildNullAble();
 // 建立first和follow集合
@@ -65,6 +65,14 @@ void buildFollow();
 // 建立first_sSet集合
 void buildSplitedIndex();
 void buildFirst_sSet();
+
+/**
+ * betas：文法右部分（分割后）
+ * pos，当前走到右部的位置
+ * a，移进到当前文法的的文法的first集合
+ * left，需要新的select集合的文法左部
+ */
+set<string> getSelectSet(vector<string> betas, set<string> a, string left);
 // 错误列表
 class PRODUCTIONS_SENTENCE_ERROR
 {

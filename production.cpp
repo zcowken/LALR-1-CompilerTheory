@@ -1,5 +1,10 @@
 #include "production.h"
 
+#if !defined(_PRODUCTION_CPP_)
+#define _PRODUCTION_CPP_
+
+
+
 void parseStringToProductions(string line)
 {
     int pos1 = line.find("->");
@@ -466,3 +471,6 @@ set<string> getSelectSet(vector<string> betas, set<string> a, string left)
     }
     return ret;
 }
+
+
+#endif // _PRODUCTION_CPP_

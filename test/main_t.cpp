@@ -1,4 +1,6 @@
 #include "../production.cpp"
+#include "../LDLR.cpp"
+
 // parseStringToProductions_t("A->C|dx|");
 
 void parseStringToProductions_t(string line)
@@ -157,5 +159,6 @@ int main()
     test();
     // buildProductionLefts_t("../file.txt");
     // parseStringToProductions_t("Ac->Ba|d");
-    getSelectSet_s_t();
+    // getSelectSet_s_t();
+    buildDFA();
 }

@@ -92,7 +92,7 @@ void readProductions(string fileName)
     }
 
     // 添加拓展文法
-    string externProduction = "S'->" + lines[0].substr(0, lines[0].find("->")) + "$";
+    string externProduction = "S'->" + lines[0].substr(0, lines[0].find("->"));
     productionLefts.insert("S'");
 
     lines.push_back("");

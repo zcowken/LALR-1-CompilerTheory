@@ -161,4 +161,5 @@ int main()
     // parseStringToProductions_t("Ac->Ba|d");
     // getSelectSet_s_t();
     buildDFA();
+    showLR1_DFA();
 }

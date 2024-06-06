@@ -1,5 +1,7 @@
 #include "production.cpp"
 #include "queue"
+#include <sstream>
+#include<string.h>
 #if !defined(_LDLR_H_)
 #define _LDLR_H_
 
@@ -10,6 +12,19 @@ public:
     int index;
     int pos;
     set<string> select;
+    bool reduce = false;
+
+    string toString()
+    {
+        stringstream ss;
+        if (reduce)
+        {
+            ss << "reduce -- ";
+        }
+        ss << "index:" << this->index << "\t" << productions[this->index].rightToString() << '\t' << "pos" << this->pos << "\t" << "select:" << setToString(this->select);
+        string s = ss.str();
+        return s;
+    }
 };
 
 // DFA的每个表项
@@ -18,6 +33,17 @@ class DFA_item
 public:
     int id;
     vector<item> items;
+
+    string toStringItems()
+    {
+        string res = "";
+        for (item i : items)
+        {
+            res = res + i.toString() + "\n";
+        }
+        res.pop_back();
+        return res;
+    }
 };
 
 // DFA图的存储，二级索引广义表
@@ -38,5 +64,16 @@ bool isEqualForItem(item item1, item item2);
 bool isEqualForDfaItem(DFA_item item1, DFA_item item2);
 
 vector<item> generateNewItems(vector<item> items);
+
+// 合并两个DfaItem
+DFA_item mergeDfaItem(DFA_item item1, DFA_item item2);
+
+// 展示LR(1)DFA
+void showLR1_DFA();
+
+// ERROR
+class POSITION_VISIT_ERROR
+{
+};
 
 #endif // _LDLR_H_

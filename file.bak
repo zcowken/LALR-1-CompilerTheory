@@ -9,3 +9,9 @@ X->Y|a
 
 
 A->(A)|a
+
+S->L=R
+S->R
+L->*R
+L->id
+R->L

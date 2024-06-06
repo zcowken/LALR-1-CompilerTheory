@@ -17,7 +17,7 @@ void buildDFA()
     item1.select.insert("$");
     dfaItem1.items.push_back(item1);
     dfaItem1.items = generateNewItems(dfaItem1.items);
-    dfaItem1.items = mergeDfaItem(dfaItem1.items);
+    dfaItem1.items = mergeDfaItemItems(dfaItem1.items);
     //  记录DFA_item
     DFA_item_s.push_back(dfaItem1);
 
@@ -114,7 +114,7 @@ void buildDFA()
 
             // 更新DfaItem
             addDfaItem.items = generateNewItems(addDfaItem.items);
-            addDfaItem.items = mergeDfaItem(addDfaItem.items);
+            addDfaItem.items = mergeDfaItemItems(addDfaItem.items);
             // 边不存在，准备添加边
             // 如果重复
             int findPos = -1;
@@ -290,7 +290,7 @@ vector<item> generateNewItems(vector<item> items)
     return newItems;
 }
 
-vector<item> mergeDfaItem(vector<item> newItems)
+vector<item> mergeDfaItemItems(vector<item> newItems)
 {
     vector<item> newItemsSimplify;
     // 合并后化简
@@ -331,6 +331,126 @@ vector<item> mergeDfaItem(vector<item> newItems)
     return newItemsSimplify;
 }
 
+void makeLALR()
+{
+    memset(lalrMerged, 0, sizeof(lalrMerged));
+    DFA_LALR = DFA;
+    DFA_item_s_LALR = DFA_item_s;
+
+    // 根据返回的id更新DFA_LALR
+    bool vis[1024];
+    memset(vis, 0, sizeof(vis));
+    for (int i = 0; i < DFA_item_s_LALR.size(); i++)
+    {
+        if (vis[i])
+        {
+            continue;
+        }
+        if (lalrMerged[i])
+        {
+            continue;
+        }
+        vis[i] = true;
+        vector<int> v;
+        for (int j = i + 1; j < DFA_item_s_LALR.size(); j++)
+        {
+            if (isEqualForItemWithoutSelect(DFA_item_s_LALR[i].items[0], DFA_item_s_LALR[j].items[0]))
+            {
+                v.push_back(j);
+                vis[j] = true;
+            }
+        }
+        // 更新
+        for (int j = 0; j < v.size(); j++)
+        {
+            int resId = mergeDfaItem(i, v[j]);
+            for (int id = 0; id < DFA_item_s_LALR.size(); id++)
+            {
+                // 除去被合并的项目
+                if (id == i || id == v[j])
+                {
+                    continue;
+                }
+                unordered_map<int, std::unordered_map<std::string, int>> DFA_LALR_copy = DFA_LALR;
+                for (pair<string, int> m : DFA_LALR_copy[id])
+                {
+                    // 更新为合并后的id
+                    if (DFA_LALR[id][m.first] == v[j])
+                    {
+                        DFA_LALR[id][m.first] = resId;
+                    }
+                }
+            }
+        }
+    }
+    // mergeDfaItem(3, 6);
+    // mergeDfaItem(5, 2);
+}
+
+int mergeDfaItem(int id1, int id2)
+{
+    if (id1 == id2) // 合并自己的话，无需处理
+    {
+        return id1;
+    }
+    if (id1 > id2)
+    {
+        swap(id1, id2);
+    }
+    // 健康性
+    if (lalrMerged[id1] || lalrMerged[id2])
+    {
+        return id1;
+    }
+
+    lalrMerged[id2] = true;
+    // 递
+    // 记录所有可以走的边
+    set<string> edges;
+    for (pair<string, int> edge : DFA_LALR[id1])
+    {
+        edges.insert(edge.first);
+    }
+    for (pair<string, int> edge : DFA_LALR[id2])
+    {
+        edges.insert(edge.first);
+    }
+
+    for (string edge : edges)
+    {
+        if ((DFA_LALR[id1].find(edge) != DFA_LALR[id1].end()) && (DFA_LALR[id2].find(edge) != DFA_LALR[id2].end()))
+        {
+            // 如果有相同的边
+            // 递归合并
+            // 如果是环边
+            if (DFA_LALR[id1][edge] == id1)
+            {
+                // 小id的自环没关系
+            }
+            else if (DFA_LALR[id2][edge] == id2)
+            {
+                // 大id的自环，更新自环形式
+                DFA_LALR[id1][edge] = id1;
+            }
+            else
+            {
+                int retId = mergeDfaItem(DFA_LALR[id1][edge], DFA_LALR[id2][edge]);
+                DFA_LALR[id1][edge] = retId;
+            }
+        }
+    }
+
+    // 合并，化简
+    vector<item> temp = DFA_item_s_LALR[id1].items;
+    for (item i : DFA_item_s_LALR[id2].items)
+    {
+        temp.push_back(i);
+    }
+    DFA_item_s_LALR[id1].items = mergeDfaItemItems(temp);
+    // 返回合并后的id1
+    return id1;
+}
+
 void showLR1_DFA()
 {
     queue<int> q;
@@ -354,6 +474,44 @@ void showLR1_DFA()
         // 层次加入节点
         for (pair<string, int> m : DFA[dfaItem.id])
         {
+            string edge = m.first;
+            int v = m.second;
+            cout << "Edge:" << m.first << "\t" << "to Node:" << v << endl;
+            // push
+            q.push(v);
+        }
+        cout << "---------------------------------------end" << endl;
+    }
+}
+
+void showLALR_DFA()
+
+{
+    queue<int> q;
+    bool vis[1024];
+    memset(vis, 0, sizeof(vis));
+    q.push(0);
+    while (!q.empty())
+    {
+        int curr = q.front();
+        q.pop();
+        if (vis[curr])
+        {
+            continue;
+        }
+        vis[curr] = true;
+
+        DFA_item dfaItem = DFA_item_s_LALR[curr];
+        // 输出value
+        cout << "----------- Node:" << curr << "--------------" << endl;
+        cout << dfaItem.toStringItems() << endl;
+        // 层次加入节点
+        for (pair<string, int> m : DFA_LALR[dfaItem.id])
+        {
+            if (lalrMerged[m.second])
+            {
+                continue;
+            }
             string edge = m.first;
             int v = m.second;
             cout << "Edge:" << m.first << "\t" << "to Node:" << v << endl;

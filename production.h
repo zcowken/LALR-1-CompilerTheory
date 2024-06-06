@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "globals.h"
 
 #define PRODUCTION_MAX_SIZE 1024
@@ -26,7 +27,7 @@ public:
         string temp = "";
         for (string si : this->right)
         {
-            temp += si;
+            temp = temp + si + " ";
         }
         return temp;
     }

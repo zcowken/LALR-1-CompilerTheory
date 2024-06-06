@@ -64,11 +64,14 @@ public:
 // DFA图的存储，二级索引广义表
 int cntForDFA_item = 0;
 unordered_map<int, unordered_map<string, int>> DFA;
+unordered_map<int, unordered_map<string, int>> DFA_LALR;
+
 // // DFA图的映射
 // unordered_map<int, int> DFA_item_map;
 
 // DFA图的项目的地址记录器
 vector<DFA_item> DFA_item_s;
+vector<DFA_item> DFA_item_s_LALR;
 
 // 建图
 void buildDFA();
@@ -81,13 +84,23 @@ bool isEqualForItemWithoutSelect(item item1, item item2);
 // 判断两个DFA_item是否相等
 bool isEqualForDfaItem(DFA_item item1, DFA_item item2);
 
+// 生成所有可能推到出的item文法项目
 vector<item> generateNewItems(vector<item> items);
 
-// 化简一个DfaItem
-vector<item> mergeDfaItem(vector<item> newItems);
+// 化简一个DfaItem的items集合
+vector<item> mergeDfaItemItems(vector<item> newItems);
 
+// 合并两个DfaItem
+void makeLALR();
+int mergeDfaItem(int id1, int id2);
+// 判断此id是否已经合并
+bool lalrMerged[1024];
 // 展示LR(1)DFA
 void showLR1_DFA();
+
+// 展示函数
+void showLALR_DFA();
+
 
 // ERROR
 class POSITION_VISIT_ERROR

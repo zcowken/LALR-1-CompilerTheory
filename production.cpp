@@ -3,70 +3,45 @@
 #if !defined(_PRODUCTION_CPP_)
 #define _PRODUCTION_CPP_
 
-
-
 void parseStringToProductions(string line)
 {
-    int pos1 = line.find("->");
-    string left = line.substr(0, pos1);
-    if (line.find("->") != string::npos)
+    stringstream ss(line);
+    string left;
+    ss >> left;
+    string arrow;
+    ss >> arrow;
+    vector<string> parts;
+    // 公共的左部
+    production newProduction;
+    newProduction.left = left;
+
+    if (arrow == "->")
     {
-        int pos = line.find("->") + string("->").length();
-        string rights = line.substr(pos); // 右部的整体
-        string rights_copy = rights;      // 右部的整体
-        vector<string> parts;
-        while (rights_copy.find("|") != string::npos)
+        while (!ss.eof())
         {
-            int pos2 = rights_copy.find("|");
-            string part_temp = rights_copy.substr(0, pos2);
-            parts.push_back(part_temp);
-            rights_copy.erase(0, part_temp.length() + string(("|")).length());
-        }
-        if (!rights_copy.empty())
-        {
-            parts.push_back(rights_copy);
-        }
-        else
-        {
-            throw new PRODUCTIONS_SENTENCE_ERROR();
-        }
-        // 存储回去
-        for (string p_t : parts)
-        {
-            production production_temp;
-            production_temp.left = left;
-            for (int i = 0; i < p_t.size(); i++)
+            string temp;
+            ss >> temp;
+            if (temp.empty())
             {
-                char c = p_t[i];
-                int setFlag = false;
-                int setLen = 1;
-                string setElement = "";
-                for (string le : productionLefts)
-                {
-                    int findPos = p_t.find(le);
-                    if (findPos != string::npos && findPos == i)
-                    {
-                        setFlag = true;
-                        setLen = le.size();
-                        setElement = le;
-                        break;
-                    }
-                }
-                if (setFlag)
-                {
-                    i = i + setLen - 1;
-                    production_temp.right.push_back(setElement);
-                }
-                else
-                {
-                    production_temp.right.push_back(string(1, c));
-                }
+                continue;
             }
-            production_temp.right2 = rights;
-            productions.push_back(production_temp);
-            // 输出
-            cout << "productions中加入：" << production_temp.left << " \t" << p_t << endl;
+            if (temp == "|")
+            {
+                newProduction.right = parts;
+                productions.push_back(newProduction);
+                cout << "读入了:" << newProduction.left << " -> " << newProduction.rightToString() << endl;
+                parts.clear();
+                continue;
+            }
+            else
+            {
+                parts.push_back(temp);
+            }
         }
+        // 补全最后一次读入
+        newProduction.right = parts;
+        productions.push_back(newProduction);
+        cout << "读入了:" << newProduction.left << " -> " << newProduction.rightToString() << endl;
     }
     else
     {
@@ -92,7 +67,7 @@ void readProductions(string fileName)
     }
 
     // 添加拓展文法
-    string externProduction = "S'->" + lines[0].substr(0, lines[0].find("->"));
+    string externProduction = "S' -> " + lines[0].substr(0, lines[0].find("->"));
     productionLefts.insert("S'");
 
     lines.push_back("");
@@ -127,37 +102,46 @@ void readProductions(string fileName)
 // 构建所有的文法左部
 void buildProductionLefts(string fileName)
 {
-    // 旧写法，根据读入结果
-    // for (int i = 0; i < productions.size(); i++)
-    // {
-    //     productionLefts.insert(productions[i].left);
-    // }
-
     // 新写法
     // 读入所有行
-    vector<string> lines;
+    vector<vector<string>> lines;
+    int row_t = 0;
     ifstream ifs(fileName);
-
     while (!ifs.eof())
     {
         char temp[BUFFER_SIZE];
         ifs.getline(temp, BUFFER_SIZE);
-        string line(temp);
-        lines.push_back(line);
-    }
+        stringstream ss(temp);
+        // 跳过空行
+        if (ss.str().empty())
+        {
+            continue;
+        }
 
+        lines.push_back(vector<string>());
+        while (!ss.eof())
+        {
+            string s;
+            ss >> s;
+            lines[row_t].push_back(s);
+        }
+        row_t++;
+    }
+    for (int i = 0; i < lines.size(); i++)
+    {
+        for (int j = 0; j < lines[i].size(); j++)
+        {
+            cout << lines[i][j] << " ";
+        }
+        cout << endl;
+    }
     // 开始处理
     // productionLefts
     cout << "开始构建左部集合：" << endl;
-    for (string line : lines)
+    for (int i = 0; i < lines.size(); i++)
     {
-        if (line.find("->") != string::npos)
-        {
-            int pos = line.find("->");
-            productionLefts.insert(line.substr(0, pos));
-        }
+        productionLefts.insert(lines[i][0]);
     }
-
     for (string p : productionLefts)
     {
         cout << p << endl;
@@ -471,6 +455,5 @@ set<string> getSelectSet(vector<string> betas, set<string> a, string left)
     }
     return ret;
 }
-
 
 #endif // _PRODUCTION_CPP_

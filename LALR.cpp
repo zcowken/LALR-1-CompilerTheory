@@ -375,6 +375,7 @@ void makeLALR()
                 for (pair<string, int> m : DFA_LALR_copy[id])
                 {
                     // 更新为合并后的id
+                    // 连接到合并项的，更改指向为新的id
                     if (DFA_LALR[id][m.first] == v[j])
                     {
                         DFA_LALR[id][m.first] = resId;
@@ -451,6 +452,40 @@ int mergeDfaItem(int id1, int id2)
     return id1;
 }
 
+void buildMappingAndDfaitemsForLALR()
+{
+    for (int i = 0, cnt = 0; i < DFA_item_s_LALR.size(); i++)
+    {
+        if (lalrMerged[i])
+        {
+            continue;
+        }
+        DFA_item dfaItem = DFA_item_s_LALR[i];
+        mappingForLALR[dfaItem.id] = cnt;
+        dfaItem.id = cnt;
+        DFA_item_s_LALR_ordered.push_back(dfaItem);
+        cnt++;
+    }
+}
+
+void buildDFA_LALR_ordered()
+{
+    for (int id = 0; id < DFA_item_s_LALR.size(); id++)
+    {
+        if (lalrMerged[id])
+        {
+            continue;
+        }
+        // 遍历LALR的每一个节点
+        for (pair<string, int> m : DFA_LALR[id])
+        {
+            string edge = m.first;
+            int mappedId = mappingForLALR[id];
+            DFA_LALR_ordered[mappedId][edge] = mappingForLALR[m.second];
+        }
+    }
+}
+
 void showLR1_DFA()
 {
     queue<int> q;
@@ -485,7 +520,6 @@ void showLR1_DFA()
 }
 
 void showLALR_DFA()
-
 {
     queue<int> q;
     bool vis[1024];
@@ -512,6 +546,39 @@ void showLALR_DFA()
             {
                 continue;
             }
+            string edge = m.first;
+            int v = m.second;
+            cout << "Edge:" << m.first << "\t" << "to Node:" << v << endl;
+            // push
+            q.push(v);
+        }
+        cout << "---------------------------------------end" << endl;
+    }
+}
+
+void showStandardSecondSheet(unordered_map<int, unordered_map<string, int>> secondSheet, vector<DFA_item> dfaItems)
+{
+    queue<int> q;
+    bool vis[1024];
+    memset(vis, 0, sizeof(vis));
+    q.push(0);
+    while (!q.empty())
+    {
+        int curr = q.front();
+        q.pop();
+        if (vis[curr])
+        {
+            continue;
+        }
+        vis[curr] = true;
+
+        DFA_item dfaItem = dfaItems[curr];
+        // 输出value
+        cout << "----------- Node:" << curr << "--------------" << endl;
+        cout << dfaItem.toStringItems() << endl;
+        // 层次加入节点
+        for (pair<string, int> m : secondSheet[curr])
+        {
             string edge = m.first;
             int v = m.second;
             cout << "Edge:" << m.first << "\t" << "to Node:" << v << endl;

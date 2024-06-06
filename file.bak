@@ -8,7 +8,7 @@ Y->c|@
 X->Y|a
 
 
-A->(A)|a
+A -> ( A ) | a
 
 S->L=R
 S->R
@@ -27,5 +27,5 @@ R->L
 exp ->exp addop term | term
 addop -> + | -
 term -> term mulop factor | factor
-mulop -> * |/
+mulop -> * | /
 factor -> ( exp ) | n

@@ -65,6 +65,7 @@ public:
 int cntForDFA_item = 0;
 unordered_map<int, unordered_map<string, int>> DFA;
 unordered_map<int, unordered_map<string, int>> DFA_LALR;
+unordered_map<int, unordered_map<string, int>> DFA_LALR_ordered;
 
 // // DFA图的映射
 // unordered_map<int, int> DFA_item_map;
@@ -72,6 +73,8 @@ unordered_map<int, unordered_map<string, int>> DFA_LALR;
 // DFA图的项目的地址记录器
 vector<DFA_item> DFA_item_s;
 vector<DFA_item> DFA_item_s_LALR;
+vector<DFA_item> DFA_item_s_LALR_ordered;
+
 
 // 建图
 void buildDFA();
@@ -95,12 +98,29 @@ void makeLALR();
 int mergeDfaItem(int id1, int id2);
 // 判断此id是否已经合并
 bool lalrMerged[1024];
+
+// 对化简后的LALR进行映射和重构
+/**
+ * first:有序的DFA_item的项目编号
+ * second:DFA_item的id
+ */
+unordered_map<int, int> mappingForLALR;
+
+// 构建映射表
+void buildMappingAndDfaitemsForLALR();
+
+// 构建有序的LALR的DFA
+void buildDFA_LALR_ordered();
+
+
 // 展示LR(1)DFA
 void showLR1_DFA();
 
-// 展示函数
+// 展示函数LALR
 void showLALR_DFA();
 
+// 展示ordered之后的LALR
+void showStandardSecondSheet(unordered_map<int, unordered_map<string, int>> secondSheet,vector<DFA_item> dfaItems);
 
 // ERROR
 class POSITION_VISIT_ERROR

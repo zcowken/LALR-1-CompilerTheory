@@ -27,7 +27,11 @@ int main()
     buildDFA();
     showLR1_DFA();
 
-    cout << "LALR**************************" << endl;
+    cout << "LALR**************************************" << endl;
     makeLALR();
     showLALR_DFA();
+    cout << "Ordered_LALR**************************************" << endl;
+    buildMappingAndDfaitemsForLALR();
+    buildDFA_LALR_ordered();
+    showStandardSecondSheet(DFA_LALR_ordered, DFA_item_s_LALR_ordered);
 }

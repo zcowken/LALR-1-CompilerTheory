@@ -1,5 +1,5 @@
 #include "../production.cpp"
-#include "../LDLR.cpp"
+#include "../LALR.cpp"
 
 // parseStringToProductions_t("A->C|dx|");
 

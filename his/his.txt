@@ -1,0 +1,57 @@
+----------- Node:0--------------
+NodeId: 0
+index:0 S'->.A  pos0    select:{$,}
+index:2 A->.a   pos0    select:{$,}
+index:1 A->.(A) pos0    select:{$,}
+Edge:(  to Node:3
+Edge:a  to Node:2
+Edge:A  to Node:1
+---------------------------------------end
+----------- Node:3--------------
+NodeId: 3
+index:1 A->(.A) pos1    select:{$,}
+index:2 A->.a   pos0    select:{),}
+index:1 A->.(A) pos0    select:{),}
+Edge:(  to Node:6
+Edge:a  to Node:5
+Edge:A  to Node:4
+---------------------------------------end
+----------- Node:2--------------
+NodeId: 2
+reduce -- index:2       A->a.   pos1    select:{$,}
+---------------------------------------end
+----------- Node:1--------------
+NodeId: 1
+reduce -- index:0       S'->A.  pos1    select:{$,}
+---------------------------------------end
+----------- Node:6--------------
+NodeId: 6
+index:1 A->(.A) pos1    select:{),}
+index:2 A->.a   pos0    select:{),}
+index:1 A->.(A) pos0    select:{),}
+Edge:(  to Node:6
+Edge:a  to Node:5
+Edge:A  to Node:8
+---------------------------------------end
+----------- Node:5--------------
+NodeId: 5
+reduce -- index:2       A->a.   pos1    select:{),}
+---------------------------------------end
+----------- Node:4--------------
+NodeId: 4
+index:1 A->(A.) pos2    select:{$,}
+Edge:)  to Node:7
+---------------------------------------end
+----------- Node:8--------------
+NodeId: 8
+index:1 A->(A.) pos2    select:{),}
+Edge:)  to Node:9
+---------------------------------------end
+----------- Node:7--------------
+NodeId: 7
+reduce -- index:1       A->(A). pos3    select:{$,}
+---------------------------------------end
+----------- Node:9--------------
+NodeId: 9
+reduce -- index:1       A->(A). pos3    select:{),}
+---------------------------------------end

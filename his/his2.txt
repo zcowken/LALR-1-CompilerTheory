@@ -1,0 +1,316 @@
+curr = 0
+curr msg:NodeId: 0
+index:0 S'->.S  pos0    select:{$,}
+index:2 S->.R   pos0    select:{$,}
+index:1 S->.L=R pos0    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+开始补全
+reduce -- index:0       S'->S   pos1    select:{$,}
+结束补全
+add to queue1
+add msg: NodeId: 1
+reduce -- index:0       S'->S   pos1    select:{$,}
+开始补全
+reduce -- index:2       S->R    pos1    select:{$,}
+结束补全
+add to queue2
+add msg: NodeId: 2
+reduce -- index:2       S->R    pos1    select:{$,}
+开始补全
+index:1 S->L.=R pos1    select:{$,}
+reduce -- index:5       R->L    pos1    select:{$,}
+结束补全
+add to queue3
+add msg: NodeId: 3
+index:1 S->L.=R pos1    select:{$,}
+reduce -- index:5       R->L    pos1    select:{$,}
+开始补全
+reduce -- index:4       L->d    pos1    select:{=,}
+reduce -- index:4       L->d    pos1    select:{$,}
+结束补全
+add to queue4
+add msg: NodeId: 4
+reduce -- index:4       L->d    pos1    select:{=,}
+reduce -- index:4       L->d    pos1    select:{$,}
+开始补全
+index:3 L->*.R  pos1    select:{=,}
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{=,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+结束补全
+add to queue5
+add msg: NodeId: 5
+index:3 L->*.R  pos1    select:{=,}
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{=,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+curr = 0        end
+curr = 1
+curr msg:NodeId: 1
+reduce -- index:0       S'->S   pos1    select:{$,}
+curr = 1        end
+curr = 2
+curr msg:NodeId: 2
+reduce -- index:2       S->R    pos1    select:{$,}
+curr = 2        end
+curr = 3
+curr msg:NodeId: 3
+index:1 S->L.=R pos1    select:{$,}
+reduce -- index:5       R->L    pos1    select:{$,}
+开始补全
+index:1 S->L=.R pos2    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+结束补全
+add to queue6
+add msg: NodeId: 6
+index:1 S->L=.R pos2    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+curr = 3        end
+curr = 4
+curr msg:NodeId: 4
+reduce -- index:4       L->d    pos1    select:{=,}
+reduce -- index:4       L->d    pos1    select:{$,}
+curr = 4        end
+curr = 5
+curr msg:NodeId: 5
+index:3 L->*.R  pos1    select:{=,}
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{=,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+开始补全
+reduce -- index:3       L->*R   pos2    select:{=,}
+reduce -- index:3       L->*R   pos2    select:{$,}
+结束补全
+add to queue7
+add msg: NodeId: 7
+reduce -- index:3       L->*R   pos2    select:{=,}
+reduce -- index:3       L->*R   pos2    select:{$,}
+开始补全
+reduce -- index:5       R->L    pos1    select:{=,}
+reduce -- index:5       R->L    pos1    select:{$,}
+结束补全
+add to queue8
+add msg: NodeId: 8
+reduce -- index:5       R->L    pos1    select:{=,}
+reduce -- index:5       R->L    pos1    select:{$,}
+开始补全
+reduce -- index:4       L->d    pos1    select:{=,}
+reduce -- index:4       L->d    pos1    select:{$,}
+结束补全
+开始补全
+index:3 L->*.R  pos1    select:{=,}
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{=,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+结束补全
+curr = 5        end
+curr = 6
+curr msg:NodeId: 6
+index:1 S->L=.R pos2    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+开始补全
+reduce -- index:1       S->L=R  pos3    select:{$,}
+结束补全
+add to queue9
+add msg: NodeId: 9
+reduce -- index:1       S->L=R  pos3    select:{$,}
+开始补全
+reduce -- index:5       R->L    pos1    select:{$,}
+结束补全
+add to queue10
+add msg: NodeId: 10
+reduce -- index:5       R->L    pos1    select:{$,}
+开始补全
+reduce -- index:4       L->d    pos1    select:{$,}
+结束补全
+add to queue11
+add msg: NodeId: 11
+reduce -- index:4       L->d    pos1    select:{$,}
+开始补全
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+结束补全
+add to queue12
+add msg: NodeId: 12
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+curr = 6        end
+curr = 7
+curr msg:NodeId: 7
+reduce -- index:3       L->*R   pos2    select:{=,}
+reduce -- index:3       L->*R   pos2    select:{$,}
+curr = 7        end
+curr = 8
+curr msg:NodeId: 8
+reduce -- index:5       R->L    pos1    select:{=,}
+reduce -- index:5       R->L    pos1    select:{$,}
+curr = 8        end
+curr = 9
+curr msg:NodeId: 9
+reduce -- index:1       S->L=R  pos3    select:{$,}
+curr = 9        end
+curr = 10
+curr msg:NodeId: 10
+reduce -- index:5       R->L    pos1    select:{$,}
+curr = 10       end
+curr = 11
+curr msg:NodeId: 11
+reduce -- index:4       L->d    pos1    select:{$,}
+curr = 11       end
+curr = 12
+curr msg:NodeId: 12
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+开始补全
+reduce -- index:3       L->*R   pos2    select:{$,}
+结束补全
+add to queue13
+add msg: NodeId: 13
+reduce -- index:3       L->*R   pos2    select:{$,}
+开始补全
+reduce -- index:5       R->L    pos1    select:{$,}
+结束补全
+开始补全
+reduce -- index:4       L->d    pos1    select:{$,}
+结束补全
+开始补全
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+结束补全
+curr = 12       end
+curr = 13
+curr msg:NodeId: 13
+reduce -- index:3       L->*R   pos2    select:{$,}
+curr = 13       end
+----------- Node:0--------------
+NodeId: 0
+index:0 S'->.S  pos0    select:{$,}
+index:2 S->.R   pos0    select:{$,}
+index:1 S->.L=R pos0    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+Edge:*  to Node:5
+Edge:d  to Node:4
+Edge:L  to Node:3
+Edge:R  to Node:2
+Edge:S  to Node:1
+---------------------------------------end
+----------- Node:5--------------
+NodeId: 5
+index:3 L->*.R  pos1    select:{=,}
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{=,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{=,}
+index:3 L->.*R  pos0    select:{=,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+Edge:*  to Node:5
+Edge:d  to Node:4
+Edge:L  to Node:8
+Edge:R  to Node:7
+---------------------------------------end
+----------- Node:4--------------
+NodeId: 4
+reduce -- index:4       L->d    pos1    select:{=,}
+reduce -- index:4       L->d    pos1    select:{$,}
+---------------------------------------end
+----------- Node:3--------------
+NodeId: 3
+index:1 S->L.=R pos1    select:{$,}
+reduce -- index:5       R->L    pos1    select:{$,}
+Edge:=  to Node:6
+---------------------------------------end
+----------- Node:2--------------
+NodeId: 2
+reduce -- index:2       S->R    pos1    select:{$,}
+---------------------------------------end
+----------- Node:1--------------
+NodeId: 1
+reduce -- index:0       S'->S   pos1    select:{$,}
+---------------------------------------end
+----------- Node:8--------------
+NodeId: 8
+reduce -- index:5       R->L    pos1    select:{=,}
+reduce -- index:5       R->L    pos1    select:{$,}
+---------------------------------------end
+----------- Node:7--------------
+NodeId: 7
+reduce -- index:3       L->*R   pos2    select:{=,}
+reduce -- index:3       L->*R   pos2    select:{$,}
+---------------------------------------end
+----------- Node:6--------------
+NodeId: 6
+index:1 S->L=.R pos2    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+Edge:*  to Node:12
+Edge:d  to Node:11
+Edge:L  to Node:10
+Edge:R  to Node:9
+---------------------------------------end
+----------- Node:12--------------
+NodeId: 12
+index:3 L->*.R  pos1    select:{$,}
+index:5 R->.L   pos0    select:{$,}
+index:4 L->.d   pos0    select:{$,}
+index:3 L->.*R  pos0    select:{$,}
+Edge:*  to Node:12
+Edge:d  to Node:11
+Edge:L  to Node:10
+Edge:R  to Node:13
+---------------------------------------end
+----------- Node:11--------------
+NodeId: 11
+reduce -- index:4       L->d    pos1    select:{$,}
+---------------------------------------end
+----------- Node:10--------------
+NodeId: 10
+reduce -- index:5       R->L    pos1    select:{$,}
+---------------------------------------end
+----------- Node:9--------------
+NodeId: 9
+reduce -- index:1       S->L=R  pos3    select:{$,}
+---------------------------------------end
+----------- Node:13--------------
+NodeId: 13
+reduce -- index:3       L->*R   pos2    select:{$,}
+---------------------------------------end

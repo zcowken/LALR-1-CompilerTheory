@@ -15,3 +15,10 @@ S->R
 L->*R
 L->id
 R->L
+
+
+S->L=R
+S->R
+L->*R
+L->d
+R->L

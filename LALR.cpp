@@ -17,6 +17,7 @@ void buildDFA()
     item1.select.insert("$");
     dfaItem1.items.push_back(item1);
     dfaItem1.items = generateNewItems(dfaItem1.items);
+    dfaItem1.items = mergeDfaItem(dfaItem1.items);
     //  记录DFA_item
     DFA_item_s.push_back(dfaItem1);
 
@@ -113,8 +114,8 @@ void buildDFA()
 
             // 更新DfaItem
             addDfaItem.items = generateNewItems(addDfaItem.items);
+            addDfaItem.items = mergeDfaItem(addDfaItem.items);
             // 边不存在，准备添加边
-
             // 如果重复
             int findPos = -1;
             for (int j = 0; j < DFA_item_s.size(); j++)
@@ -174,6 +175,20 @@ bool isEqualForItem(item item1, item item2)
         {
             return false;
         }
+    }
+
+    return true;
+}
+
+bool isEqualForItemWithoutSelect(item item1, item item2)
+{
+    if (item1.index != item2.index)
+    {
+        return false;
+    }
+    if (item1.pos != item2.pos)
+    {
+        return false;
     }
 
     return true;
@@ -275,31 +290,45 @@ vector<item> generateNewItems(vector<item> items)
     return newItems;
 }
 
-DFA_item mergeDfaItem(DFA_item item1, DFA_item item2)
+vector<item> mergeDfaItem(vector<item> newItems)
 {
-    vector<item> items1 = item1.items;
-    vector<item> items2 = item2.items;
-    DFA_item newDfaItem = item1;
-    vector<item> newItems = items1;
-    // 加入两者中不同的项目
-    for (int i = 0; i < items2.size(); i++)
+    vector<item> newItemsSimplify;
+    // 合并后化简
+    // 寻找合并项
+    bool vis[1024];
+    memset(vis, 0, sizeof(vis));
+    for (int i = 0; i < newItems.size(); i++)
     {
-        bool needAdd = true;
-        for (int j = 0; j < items1.size(); j++)
+        if (vis[i])
         {
-            if (isEqualForItem(items1[j], items2[i]))
+            continue;
+        }
+        vis[i] = true;
+        // 处理队列
+        vector<item> v;
+        // 找出此项目所有可以合并的项目
+        for (int j = 0; j < newItems.size(); j++)
+        {
+            if (i == j)
             {
-                needAdd = false;
-                break;
+                continue;
+            }
+            if (isEqualForItemWithoutSelect(newItems[i], newItems[j]))
+            {
+                v.push_back(newItems[j]);
+                vis[j] = true;
             }
         }
-        if (needAdd)
+
+        // 开始合并select集合
+        item temp = newItems[i];
+        for (item item_i : v)
         {
-            newItems.push_back(items2[i]);
+            temp.select.insert(item_i.select.begin(), item_i.select.end());
         }
+        newItemsSimplify.push_back(temp);
     }
-    newDfaItem.items = newItems;
-    return newDfaItem;
+    return newItemsSimplify;
 }
 
 void showLR1_DFA()
@@ -328,7 +357,6 @@ void showLR1_DFA()
             string edge = m.first;
             int v = m.second;
             cout << "Edge:" << m.first << "\t" << "to Node:" << v << endl;
-
             // push
             q.push(v);
         }

@@ -75,13 +75,16 @@ void buildDFA();
 // 判断两个 item 是否相等
 bool isEqualForItem(item item1, item item2);
 
+// 除去select集合外是否等价
+bool isEqualForItemWithoutSelect(item item1, item item2);
+
 // 判断两个DFA_item是否相等
 bool isEqualForDfaItem(DFA_item item1, DFA_item item2);
 
 vector<item> generateNewItems(vector<item> items);
 
-// 合并两个DfaItem
-DFA_item mergeDfaItem(DFA_item item1, DFA_item item2);
+// 化简一个DfaItem
+vector<item> mergeDfaItem(vector<item> newItems);
 
 // 展示LR(1)DFA
 void showLR1_DFA();

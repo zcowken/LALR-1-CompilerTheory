@@ -1,9 +1,18 @@
+#ifndef LALR_H
+#define LALR_H
 #include "production.cpp"
-#include "queue"
+#include"globals.cpp"
 #include <sstream>
 #include <string.h>
-#if !defined(_LALR_H_)
-#define _LALR_H_
+#include <queue>
+
+// extern vector<production> productions;
+// extern  set<string> productionLefts;
+// extern set<string>  NullAble;
+// extern unordered_map<string, set<string>> firstSet;
+// extern unordered_map<string, set<string>> followSet;
+// extern unordered_map<string, unordered_map<string, int>> SplitedIndex;
+// extern unordered_map<int, set<string>> first_sSet;
 
 // 块
 class item
@@ -75,7 +84,6 @@ vector<DFA_item> DFA_item_s;
 vector<DFA_item> DFA_item_s_LALR;
 vector<DFA_item> DFA_item_s_LALR_ordered;
 
-
 // 建图
 void buildDFA();
 // 判断两个 item 是否相等
@@ -112,7 +120,6 @@ void buildMappingAndDfaitemsForLALR();
 // 构建有序的LALR的DFA
 void buildDFA_LALR_ordered();
 
-
 // 展示LR(1)DFA
 void showLR1_DFA();
 
@@ -120,11 +127,62 @@ void showLR1_DFA();
 void showLALR_DFA();
 
 // 展示ordered之后的LALR
-void showStandardSecondSheet(unordered_map<int, unordered_map<string, int>> secondSheet,vector<DFA_item> dfaItems);
+void showStandardSecondSheet(unordered_map<int, unordered_map<string, int>> secondSheet, vector<DFA_item> dfaItems);
+
+// 分析表的项目
+enum SheetAction
+{
+    NONE,
+    GOTO,
+    SHIFT,
+    REDUCE,
+    ACCEPT,
+};
+unordered_map<int, string> SheetActionMapToStr = {{GOTO, "goto"}, {SHIFT, "shift"}, {REDUCE, "reduce"}, {ACCEPT, "Accept"}, {NONE, ""}};
+
+class SheetItem
+{
+public:
+    SheetAction sheetAction;
+    int value;
+    string toString()
+    {
+        if (sheetAction == SheetAction::REDUCE && value == 0)
+        {
+            return "Accept";
+        }
+        string ret;
+        ret = SheetActionMapToStr[sheetAction] + to_string(value);
+        return ret;
+    }
+};
+
+// 表头的类型
+enum SheetHeaderAction
+{
+    ACTION,
+    GOTO_2
+};
+class SheetHeader
+{
+public:
+    SheetHeaderAction sheetHeaderAction;
+    string value;
+};
+// 分析表的表头（分别加入表头保证顺序）
+vector<SheetHeader> analyseSheetHeader;
+// 分析表
+unordered_map<int, unordered_map<string, SheetItem>> analyseSheet;
+// 创建分析表
+void buildAnalyseSheet();
+// 展示分析表
+void showAnalyzeSheet();
 
 // ERROR
 class POSITION_VISIT_ERROR
 {
 };
 
-#endif // _LALR_H_
+// 回收
+void reocveryForLALR();
+#endif // LALR_H

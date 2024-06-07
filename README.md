@@ -103,25 +103,16 @@ select，集合存放下一个可能位的符号集合，
 将 items 添加合并，之后简化，然后记录被合并的 id（大的被合并）
 如果合并的 dfaItem 有边，将边到达的终点执行此递归函数
 
+```c++
 int func(int id1,int id2)
 {
-if(id1>id2)
-{
-swap
-}
+    if(id1>id2)
+    {
+        swap
+    }
 
     // 递
-    vector<pair<string,int>> edges1;
-    vector<pair<string,int>> edges2;
-
-    for(pair<string,int>:DFA[id1])
-    {
-        edges1.push
-    }
-    for(pair<string,int>:DFA[id2])
-    {
-        edges2.push
-    }
+    创建所有的edge边
 
     for(i in edges1)
     {
@@ -142,3 +133,11 @@ swap
     return id1
 
 }
+```
+
+### 分析表
+
+#### 分析表项
+
+分析表是一个二维表，索引方式是，状态号，符号，然后索引到一个 action
+这个 action 可以是归约 r，移进 s，非终结符的移进 goto

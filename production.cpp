@@ -1,7 +1,8 @@
-#include "production.h"
 
 #if !defined(_PRODUCTION_CPP_)
 #define _PRODUCTION_CPP_
+
+#include "production.h"
 
 void parseStringToProductions(string line)
 {
@@ -218,7 +219,13 @@ void buildFirst()
                 // 如果是集合
                 if (productionLefts.find(b) != productionLefts.end())
                 {
-                    // 添加右部的frist
+                    // 添加右部的frist,并且不添加空符号
+                    set<string> addSet(firstSet[b].begin(), firstSet[b].end());
+                    // auto ceigemaPos = addSet.find(CEIGEMA);
+                    // if (ceigemaPos != addSet.end())
+                    // {
+                    //     addSet.erase(ceigemaPos);
+                    // }
                     firstSet[left].insert(firstSet[b].begin(), firstSet[b].end());
                     // 如果b文法永远不空
                     if (NullAble.find(b) == NullAble.end())
@@ -235,7 +242,7 @@ void buildFirst()
                     if (b == CEIGEMA)
                     {
                         // 如果为空，还是需要往后找
-                        // 为了观察把，空符号补全
+                        // 空符号本身不加入first集合
                         firstSet[left].insert(b);
                     }
                     else
@@ -245,6 +252,21 @@ void buildFirst()
                     }
                 }
             }
+            // 如果从未break,也就是此文法右部都可能为空,就加入空符号
+            // bool isAllCanNull = true;
+            // for (string b : p_t.right) // 遍历一段文法的每一个字符
+            // {
+            //     if (NullAble.find(b) != NullAble.end() || b == CEIGEMA)
+            //     {
+            //         continue;
+            //     }
+            //     isAllCanNull = false;
+            //     break;
+            // }
+            // if (isAllCanNull)
+            // {
+            //     firstSet[left].insert(CEIGEMA);
+            // }
 
             int endSetSize = firstSet[left].size();
             // 判断集合是否一致
@@ -454,6 +476,17 @@ set<string> getSelectSet(vector<string> betas, set<string> a, string left)
         ret.insert(followSet[left].begin(), followSet[left].end());
     }
     return ret;
+}
+
+void recoveryForProduction()
+{
+    productions.clear();
+    productionLefts.clear();
+    NullAble.clear();
+    firstSet.clear();
+    followSet.clear();
+    SplitedIndex.clear();
+    first_sSet.clear();
 }
 
 #endif // _PRODUCTION_CPP_

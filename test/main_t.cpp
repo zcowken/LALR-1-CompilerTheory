@@ -1,3 +1,8 @@
+// #include "../production.h"
+// #include "../LALR.h"
+#if !defined(M_MAIN)
+#define M_MAIN
+
 #include "../production.cpp"
 #include "../LALR.cpp"
 
@@ -17,16 +22,22 @@ void test()
     buildFirst_sSet();
 }
 
-int main()
+/*
+"./file.txt"
+*/
+void process(string fileName)
 {
-    testInit();
-    test();
-    // buildProductionLefts_t("../file.txt");
-    // parseStringToProductions_t("Ac->Ba|d");
-    // getSelectSet_s_t();
+    readProductions(fileName);
+
+    // 文法build
+    buildNullAble();
+    buildFirst();
+    buildFollow();
+    buildSplitedIndex();
+    buildFirst_sSet();
+    // LR1相关build
     buildDFA();
     showLR1_DFA();
-
     cout << "LALR**************************************" << endl;
     makeLALR();
     showLALR_DFA();
@@ -34,4 +45,18 @@ int main()
     buildMappingAndDfaitemsForLALR();
     buildDFA_LALR_ordered();
     showStandardSecondSheet(DFA_LALR_ordered, DFA_item_s_LALR_ordered);
+    // 分析表
+    cout << "AnalyseSheet:**************************************" << endl;
+    buildAnalyseSheet();
+    showAnalyzeSheet();
 }
+
+int main()
+{
+    process("./file.txt");
+    recoveryForProduction();
+    reocveryForLALR();
+    // process("./file2.txt");
+}
+
+#endif // M_MAIN

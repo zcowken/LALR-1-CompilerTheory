@@ -1,7 +1,7 @@
 #if !defined(_LALR_CPP_)
 #define _LALR_CPP_
-#include "LALR.h"
 
+#include "LALR.h"
 void buildDFA()
 {
     // 设置DFA表项信息
@@ -162,8 +162,8 @@ bool isEqualForItem(item item1, item item2)
     {
         return false;
     }
-    vector<string> temp1 = vector(item1.select.begin(), item1.select.end());
-    vector<string> temp2 = vector(item2.select.begin(), item2.select.end());
+    vector<string> temp1 = vector<string>(item1.select.begin(), item1.select.end());
+    vector<string> temp2 = vector<string>(item2.select.begin(), item2.select.end());
     // 大者在前
     if (temp1.size() != temp2.size())
     {
@@ -486,6 +486,121 @@ void buildDFA_LALR_ordered()
     }
 }
 
+void buildAnalyseSheet()
+{
+    // 准备加入表头
+    set<string> VT;
+    set<string> VN;
+
+    // 遍历LALR的所有节点
+    queue<int> q;
+    bool vis[1024];
+    memset(vis, 0, sizeof(vis));
+    q.push(0);
+    while (!q.empty())
+    {
+        int curr = q.front();
+        q.pop();
+        if (vis[curr])
+        {
+            continue;
+        }
+        vis[curr] = true;
+
+        DFA_item dfaItem = DFA_item_s_LALR_ordered[curr];
+
+        // 处理归约项目
+        // 遍历dfaItem.items的每一个项目,如果是归约,加入归约边,如果不是,就暂时不处理
+        for (int i = 0; i < dfaItem.items.size(); i++)
+        {
+            // 如果是是归约项
+            if (dfaItem.items[i].reduce)
+            {
+                // 准备添加reduce
+                // 建立表项
+                SheetItem sheetItem;
+                set<string> edges = dfaItem.items[i].select;
+                for (string edge : edges)
+                {
+                    VT.insert(edge);
+                    // 给出归约的文法索引
+                    sheetItem.value = dfaItem.items[i].index;
+                    sheetItem.sheetAction = SheetAction::REDUCE;
+                    analyseSheet[curr][edge] = sheetItem;
+                }
+            }
+        }
+        // 如果不是归约项,就不处理,直接压入,下一个处理节点
+        // 层次加入连接了边的节点
+        for (pair<string, int> m : DFA_LALR_ordered[curr])
+        {
+            string edge = m.first;
+            int v = m.second;
+            // push
+            q.push(v);
+
+            // 建立表项
+            SheetItem sheetItem;
+            // 如果是非终结符号
+            if (productionLefts.find(edge) != productionLefts.end())
+            {
+                VN.insert(edge);
+                sheetItem.value = v;
+                sheetItem.sheetAction = SheetAction::GOTO;
+            }
+            else
+            {
+                VT.insert(edge);
+                sheetItem.value = v;
+                sheetItem.sheetAction = SheetAction::SHIFT;
+            }
+            analyseSheet[curr][edge] = sheetItem;
+        }
+    }
+
+    // 建立表头（定义左边部分是终结符）
+    for (string i : VT)
+    {
+        SheetHeader sheetHeader;
+        sheetHeader.sheetHeaderAction = SheetHeaderAction::ACTION;
+        sheetHeader.value = i;
+        analyseSheetHeader.push_back(sheetHeader);
+    }
+    for (string i : VN)
+    {
+        SheetHeader sheetHeader;
+        sheetHeader.sheetHeaderAction = SheetHeaderAction::GOTO_2;
+        sheetHeader.value = i;
+        analyseSheetHeader.push_back(sheetHeader);
+    }
+    cout << "表头为:";
+    for (SheetHeader sha : analyseSheetHeader)
+    {
+        cout << sha.value << " ";
+    }
+    cout << endl;
+}
+
+void showAnalyzeSheet()
+{
+    cout << "sheetHeader\n\t";
+    for (int i = 0; i < analyseSheetHeader.size(); i++)
+    {
+        cout << analyseSheetHeader[i].value << "\t";
+    }
+    cout << endl;
+    for (int i = 0; i < DFA_item_s_LALR_ordered.size(); i++)
+    {
+        cout << "id:" << i << "\t";
+        for (int j = 0; j < analyseSheetHeader.size(); j++)
+        {
+            SheetItem sheetItem = analyseSheet[i][analyseSheetHeader[j].value];
+            cout << sheetItem.toString() << "\t";
+        }
+        cout << endl;
+    }
+}
+
 void showLR1_DFA()
 {
     queue<int> q;
@@ -587,6 +702,24 @@ void showStandardSecondSheet(unordered_map<int, unordered_map<string, int>> seco
         }
         cout << "---------------------------------------end" << endl;
     }
+}
+
+void reocveryForLALR()
+{
+    // DFA
+    DFA.clear();
+    DFA_LALR.clear();
+    DFA_LALR_ordered.clear();
+    // items
+    DFA_item_s.clear();
+    DFA_item_s_LALR.clear();
+    DFA_item_s_LALR_ordered.clear();
+    // 化简后让编号顺序化的映射关系
+    mappingForLALR.clear();
+    memset(lalrMerged, 0, sizeof(lalrMerged));
+    // 分析表
+    analyseSheetHeader.clear();
+    analyseSheet.clear();
 }
 
 #endif // _LALR_CPP_

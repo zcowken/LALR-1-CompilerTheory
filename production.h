@@ -1,5 +1,6 @@
 #if !defined(PRODUCTION_H)
 #define PRODUCTION_H
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -7,7 +8,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "globals.h"
+#include "globals.cpp"
 
 #define PRODUCTION_MAX_SIZE 1024
 #define BUFFER_SIZE 1024
@@ -79,5 +80,8 @@ class PRODUCTIONS_SENTENCE_ERROR
 {
     string message = "文法格式错误";
 };
+
+// 回收初始化全局变量
+void recoveryForProduction();
 
 #endif // __PRODUCTION_H

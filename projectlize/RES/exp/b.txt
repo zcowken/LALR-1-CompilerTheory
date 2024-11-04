@@ -1,0 +1,18 @@
+
+/		$		(		)		*		+		-		/		n		addop		exp		factor		mulop		term
+0				s1												s4				g2		g3				g5
+1				s1												s4				g6		g3				g5
+2		r0								s7		s8						g9
+3		r6				r6		r6		r6		r6		r6
+4		r10				r10		r10		r10		r10		r10
+5		r2				r2		s10		r2		r2		s11										g12
+6						s13				s7		s8						g9
+7				r3												r3
+8				r4												r4
+9				s1												s4						g3				g14
+10				r7												r7
+11				r8												r8
+12				s1												s4						g15
+13		r9						r9		r9		r9		r9
+14		r1				r1		s10		r1		r1		s11										g12
+15		r5				r5		r5		r5		r5		r5

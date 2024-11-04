@@ -1,0 +1,17 @@
+program -> stmt-sequence
+stmt-sequence -> stmt-sequence _branch statement | statement
+statement -> if-stmt | repeat-stmt | assign-stmt | read-stmt | write-stmt
+if-stmt -> _if exp _then stmt-sequence _end|_if exp _then stmt-sequence _else stmt-sequence _end
+repeat-stmt -> _repeat stmt-sequence _until exp
+assign-stmt -> _id _assignop exp
+read-stmt -> _read _id
+write-stmt -> _write exp
+exp -> simple-exp comparison-op simple-exp | simple-exp
+comparison-op -> _small | _big | _equal | _smallequal | _unequal | _bigequal 
+simple-exp -> simple-exp addop term | term 
+addop -> _addop | _minusop
+term -> term mulop factor | factor 
+mulop -> _mulop | _divisionop | _modop 
+factor -> factor powop index | index
+powop -> _powop 
+index -> _leftsmall exp _rightsmall | _num | _id 

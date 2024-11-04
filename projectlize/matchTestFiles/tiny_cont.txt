@@ -1,0 +1,9 @@
+if
+identifier
+=
+number
+then
+identifier
+:=
+number
+end

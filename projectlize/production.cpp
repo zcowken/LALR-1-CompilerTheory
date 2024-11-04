@@ -1,10 +1,9 @@
-
 #if !defined(_PRODUCTION_CPP_)
 #define _PRODUCTION_CPP_
-
 #include "production.h"
+#include "globals.h"
 
-void parseStringToProductions(string line)
+void ProductionUtil::parseStringToProductions(string line)
 {
     stringstream ss(line);
     string left;
@@ -51,7 +50,7 @@ void parseStringToProductions(string line)
 }
 
 // 读入模块函数
-void readProductions(string fileName)
+void ProductionUtil::readProductions(string fileName)
 {
     // 构建buildProductionLefts
     buildProductionLefts(fileName);
@@ -59,11 +58,23 @@ void readProductions(string fileName)
     vector<string> lines;
     ifstream ifs(fileName);
 
-    while (!ifs.eof())
+    // QString fileName2 = QString::fromStdString(fileName);
+    // QFile file2(fileName2);
+    // QTextStream ifs2(&file2);// 中文路径依赖
+    // if (!file2.open(QIODevice::ReadOnly | QIODevice::Text))// 打开文件
+    // {
+    //     qDebug() << "无法打开文件";
+    //     throw PRODUCTIONS_SENTENCE_ERROR();
+    // }
+    char temp[BUFFER_SIZE];
+    while (ifs.getline(temp, BUFFER_SIZE))
+    // while (ifs2.atEnd() == false)// 中文路径依赖
     {
-        char temp[BUFFER_SIZE];
-        ifs.getline(temp, BUFFER_SIZE);
+        // QString QStringTemp = ifs2.readLine();// 中文路径依赖
+        // string line(QStringTemp.toStdString());
+        // 不添加中文依赖
         string line(temp);
+
         lines.push_back(line);
     }
 
@@ -101,18 +112,31 @@ void readProductions(string fileName)
 }
 
 // 构建所有的文法左部
-void buildProductionLefts(string fileName)
+void ProductionUtil::buildProductionLefts(string fileName)
 {
     // 新写法
     // 读入所有行
     vector<vector<string>> lines;
     int row_t = 0;
     ifstream ifs(fileName);
-    while (!ifs.eof())
+    // QString fileName2 = QString::fromStdString(fileName);
+    // QFile file2(fileName2);
+    // QTextStream ifs2(&file2);                               // 中文路径依赖
+    // if (!file2.open(QIODevice::ReadOnly | QIODevice::Text)) // 打开文件
+    // {
+    //     qDebug() << "无法打开文件";
+    //     throw PRODUCTIONS_SENTENCE_ERROR();
+    // }
+    string stemp;
+    while (std::getline(ifs, stemp))
+    // while (ifs2.atEnd() == false) // 中文路径依赖
     {
-        char temp[BUFFER_SIZE];
-        ifs.getline(temp, BUFFER_SIZE);
-        stringstream ss(temp);
+        // QString QStringTemp = ifs2.readLine(); // 中文路径依赖，每次读一行
+        // cout << "read:" << QStringTemp.toStdString() << endl;
+        //                stringstream ss(temp);
+        // stringstream ss(QStringTemp.toStdString()); // 中文路径依赖
+        stringstream ss(stemp); // 中文路径依赖
+
         // 跳过空行
         if (ss.str().empty())
         {
@@ -147,12 +171,13 @@ void buildProductionLefts(string fileName)
     {
         cout << p << endl;
     }
-    cout << "左部end" << endl;
+    cout << "Lefts--end" << endl;
+    // file2.close();
     ifs.close();
 }
 
 // 可以为空 的 文法左部
-void buildNullAble()
+void ProductionUtil::buildNullAble()
 {
     int preSize = -1;
 
@@ -201,7 +226,7 @@ void buildNullAble()
     cout << "空集合结束" << endl;
 }
 // 建立first和follow集合
-void buildFirst()
+void ProductionUtil::buildFirst()
 {
     int changed = 1;
 
@@ -283,7 +308,7 @@ void buildFirst()
         cout << left << "文法的fist：" << setToString(firstSet[left]) << endl;
     }
 }
-void buildFollow()
+void ProductionUtil::buildFollow()
 {
     int changed = 1;
     // 文法结束符号补充
@@ -362,7 +387,7 @@ void buildFollow()
 }
 
 // 建立first_sSet集合
-void buildSplitedIndex()
+void ProductionUtil::buildSplitedIndex()
 {
     for (int i = 0; i < productions.size(); i++)
     {
@@ -373,7 +398,7 @@ void buildSplitedIndex()
 }
 
 // 全局构造fist_s
-void buildFirst_sSet()
+void ProductionUtil::buildFirst_sSet()
 {
     for (production p_t : productions)
     {
@@ -434,7 +459,7 @@ void buildFirst_sSet()
     }
 }
 
-set<string> getSelectSet(vector<string> betas, set<string> a, string left)
+set<string> ProductionUtil::getSelectSet(vector<string> betas, set<string> a, string left)
 {
     set<string> ret;
     // 如果是集合
@@ -480,7 +505,7 @@ set<string> getSelectSet(vector<string> betas, set<string> a, string left)
     return ret;
 }
 
-void recoveryForProduction()
+void ProductionUtil::recoveryForProduction()
 {
     productions.clear();
     productionLefts.clear();

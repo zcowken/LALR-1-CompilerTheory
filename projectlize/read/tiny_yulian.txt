@@ -1,0 +1,36 @@
+读入了:S' -> program
+读入了:program -> stmt-sequence
+读入了:stmt-sequence -> stmt-sequence ; statement
+读入了:stmt-sequence -> statement
+读入了:statement -> if-stmt
+读入了:statement -> repeat-stmt
+读入了:statement -> assign-stmt
+读入了:statement -> read-stmt
+读入了:statement -> write-stmt
+读入了:if-stmt -> if exp then stmt-sequence end
+读入了:if-stmt -> if exp then stmt-sequence else stmt-sequence end
+读入了:repeat-stmt -> repeat stmt-sequence until exp
+读入了:assign-stmt -> identifier := exp
+读入了:read-stmt -> read identifier
+读入了:write-stmt -> write exp
+读入了:exp -> simple-exp comparison-op simple-exp
+读入了:exp -> simple-exp
+读入了:comparison-op -> <
+读入了:comparison-op -> >
+读入了:comparison-op -> =
+读入了:comparison-op -> <=
+读入了:comparison-op -> <>
+读入了:comparison-op -> >=
+读入了:simple-exp -> simple-exp addop term
+读入了:simple-exp -> term
+读入了:addop -> +
+读入了:addop -> -
+读入了:term -> term mulop factor
+读入了:term -> factor
+读入了:mulop -> *
+读入了:mulop -> /
+读入了:mulop -> %
+读入了:mulop -> ^
+读入了:factor -> (exp)
+读入了:factor -> number
+读入了:factor -> identifier

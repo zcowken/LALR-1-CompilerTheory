@@ -1,0 +1,17 @@
+          $         (         )         *         +         -         /         n         addop     exp       factor    mulop     term
+id:0      0         shift5    0         0         0         0         0         shift4    0         goto1     goto3     0         goto2
+id:1      Accept    0         0         0         shift8    shift7    0         0         goto6     0         0         0         0
+id:2      reduce2   0         reduce2   shift11   reduce2   reduce2   shift10   0         0         0         0         goto9     0
+id:3      reduce6   0         reduce6   reduce6   reduce6   reduce6   reduce6   0         0         0         0         0         0
+id:4      reduce10  0         reduce10  reduce10  reduce10  reduce10  reduce10  0         0         0         0         0         0
+id:5      0         shift5    0         0         0         0         0         shift4    0         goto12    goto3     0         goto2
+id:6      0         shift5    0         0         0         0         0         shift4    0         0         goto3     0         goto13
+id:7      0         reduce4   0         0         0         0         0         reduce4   0         0         0         0         0
+id:8      0         reduce3   0         0         0         0         0         reduce3   0         0         0         0         0
+id:9      0         shift5    0         0         0         0         0         shift4    0         0         goto14    0         0
+id:10     0         reduce8   0         0         0         0         0         reduce8   0         0         0         0         0
+id:11     0         reduce7   0         0         0         0         0         reduce7   0         0         0         0         0
+id:12     0         0         shift15   0         shift8    shift7    0         0         goto6     0         0         0         0
+id:13     reduce1   0         reduce1   shift11   reduce1   reduce1   shift10   0         0         0         0         goto9     0
+id:14     reduce5   0         reduce5   reduce5   reduce5   reduce5   reduce5   0         0         0         0         0         0
+id:15     reduce9   0         reduce9   reduce9   reduce9   reduce9   reduce9   0         0         0         0         0         0

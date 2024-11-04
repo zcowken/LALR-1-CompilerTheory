@@ -1,0 +1,20 @@
+原始
+          $         (         )         a         A
+id:0      0         shift3    0         shift2    goto1
+id:1      Accept    0         0         0         0
+id:2      reduce2   0         reduce2   0         0
+id:3      0         shift3    0         shift2    goto4
+id:4      0         0         shift5    0         0
+id:5      reduce1   0         reduce1   0         0
+
+
+
+## 巧合
+sheetHeader
+          $         (         )         a         A
+id:0      0         shift3    0         shift2    goto1
+id:1      Accept    0         0         0         0
+id:2      reduce2   0         reduce2   0         0
+id:3      0         shift3    0         shift0    goto4
+id:4      0         0         shift5    0         0
+id:5      reduce1   0         reduce1   0         0

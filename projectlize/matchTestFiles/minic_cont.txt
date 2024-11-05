@@ -1,0 +1,10 @@
+int
+ID
+;
+int
+ID
+(
+void
+)
+{
+}

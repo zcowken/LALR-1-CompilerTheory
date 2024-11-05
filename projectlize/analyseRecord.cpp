@@ -9,8 +9,8 @@ analyseRecord::analyseRecord() {
 }
 
 analyseRecord::analyseRecord(stack<int> status, stack<string> characterStatus, queue<string> inputQueueStatus) {
-    this->statusStackStatus = util::stackToString(status);
-    this->characterStackStatus = util::stackToString(characterStatus);
+    this->statusStackStatus = util::stackToString(status,1);
+    this->characterStackStatus = util::stackToString(characterStatus,1);
     this->inputQueueStatus = util::queueToString(inputQueueStatus);
 }
 

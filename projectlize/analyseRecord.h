@@ -6,7 +6,7 @@
 #include <stack>
 #include <queue>
 #include "util.h"
-
+#include <algorithm>
 using namespace std;
 
 #ifndef PROJECTLIZE_ANALYSERECORD_H

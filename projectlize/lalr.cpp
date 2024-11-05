@@ -195,7 +195,10 @@ bool LALR::isEqualForDfaItem(DFA_item item1, DFA_item item2) {
 
 vector<item> LALR::generateNewItems(vector<item> items) {
     vector<item> newItems = items;
-    cout << "开始补全" << endl;
+    if(LALR_DEBUG_OUTPUT ==1)
+    {
+        cout << "开始补全" << endl;
+    }
     for (int i = 0; i < newItems.size(); i++) {
         // 取出item数据
         item item_t = newItems[i];
@@ -223,6 +226,7 @@ vector<item> LALR::generateNewItems(vector<item> items) {
                 newItem_t.pos = 0;
                 newItem_t.production1 = nextP_t;
                 // 寻找select集合
+                // betas为下一位置开始直到结束
                 vector<string> betas(p_t.right.begin() + item_t.pos + 1, p_t.right.end());
                 // debug
                 // cout << "betas：" << endl;
@@ -251,11 +255,14 @@ vector<item> LALR::generateNewItems(vector<item> items) {
         }
     }
     // debug
-    for (auto i: newItems) {
-        cout << i.toString() << endl;
+    if(LALR_DEBUG_OUTPUT == 1)
+    {
+        for (auto i: newItems) {
+            cout << i.toString() << endl;
+        }
+        cout << "结束补全" << endl;
     }
 
-    cout << "结束补全" << endl;
 
     return newItems;
 }
@@ -535,14 +542,20 @@ bool LALR::dfaItemCoreIsEqual(DFA_item dfaItem1, DFA_item dfaItem2) {
 
 void LALR::buildAnalyseSheet() {
     // 准备加入表头
-    set<string> VT;
-    set<string> VN;
+    // 在此处再次进行构造的原因是，production中已经获取了VT和VN
+    set<string> VT = ProductionUtil1.VT;
+    set<string> VN = ProductionUtil1.productionLefts;
 
     // 遍历LALR的所有节点
     queue<int> q;
     bool vis[1024];
     memset(vis, 0, sizeof(vis));
     q.push(0);
+
+    // 记录需要空的边生成的表项目,对于他在的dfaItem的id，对所有非终结符号，进行reduce规约，规约方式为只含有空的那个item的左部
+    vector<SheetItem> nullSheetItem;
+
+
     while (!q.empty()) {
         int curr = q.front();
         q.pop();
@@ -562,7 +575,7 @@ void LALR::buildAnalyseSheet() {
                 // 建立表项
                 SheetItem sheetItem;
                 set<string> edges = dfaItem.items[i].select;
-                for (string edge: edges) {
+                for (const string &edge: edges) {
                     VT.insert(edge);
                     // 给出归约的文法索引
                     sheetItem.value = dfaItem.items[i].index;
@@ -570,12 +583,29 @@ void LALR::buildAnalyseSheet() {
                     analyseSheet[curr][edge] = sheetItem;
                 }
             }
+            // MARK 对空的处理
+            // 如果右部只有一个空，对任何的符号(T-终结符)，允许直接规约，规约方式为自己的左部
+            if (dfaItem.items[i].production1.right.size() == 1 &&
+                dfaItem.items[i].production1.right[0] == ProductionUtil1.CEIGEMA) {
+                // 建立表项
+                SheetItem sheetItem;
+                sheetItem.value = dfaItem.items[i].index;
+                sheetItem.sheetAction = SheetAction::REDUCE;
+                // 将此节点连接到的所有边设置为规约，然后，如果此节点还允许移进，在下方处理非规约的时候会覆盖掉。
+                // 如果覆盖掉了，那么就可以认为此次发生了移进规约冲突（当然，一个文法不使用空，也会发生此冲突，
+                // 只需满足规约在reduce中的sheetItem被覆盖掉，就是出现冲突
+//                for(const string& vti: VT)
+                // 但是呢，我们已经有能力计算含有空的select集合了，所以，无需使用VT进行加入，使用select集合即可
+                for (const string &vti: dfaItem.items[i].select) {
+                    analyseSheet[curr][vti] = sheetItem;
+                }
+            }
         }
         // 如果不是归约项,就不处理,直接压入,下一个处理节点
         // 层次加入连接了边的节点
         for (pair<string, int> m: DFA_LALR_ordered[curr]) {
             string edge = m.first;
-            int v = m.second;
+            int v = m.second; // 经过边，到达的终点的DfaItem的id
             // push
             q.push(v);
 
@@ -813,6 +843,10 @@ bool LALR::analyzeString(const vector<std::string> &inputStrings) {
             // 弹出被归约的状态
             // 按照规约规则弹出字符集，然后压入规约项目
             for (int t = 0; t < p_t.right.size(); t++) {
+                // 跳过空的弹出
+                if (p_t.right[t] == ProductionUtil1.CEIGEMA) {
+                    continue;
+                }
                 statusStack.pop();
                 characterStack.pop();
             }

@@ -1,5 +1,6 @@
 #ifndef LALR_H
 #define LALR_H
+#define LALR_DEBUG_OUTPUT 0
 
 #include <sstream>
 #include <string.h>

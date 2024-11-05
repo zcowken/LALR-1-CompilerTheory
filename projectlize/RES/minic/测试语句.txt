@@ -1,0 +1,56 @@
+# 定义函数+变量
+int
+ID
+;
+int
+ID
+(
+void
+)
+{
+}
+
+#RES
+AnalyseRecordList*************************************
+0	0,	$,	int,ID,;,int,ID,(,void,),{,},$,	shift10
+1	0,10,	$,int,	ID,;,int,ID,(,void,),{,},$,	reduce8	goto:6
+2	0,6,	$,type-indicator,	ID,;,int,ID,(,void,),{,},$,	shift12
+3	0,6,12,	$,type-indicator,ID,	;,int,ID,(,void,),{,},$,	shift15
+4	0,6,12,15,	$,type-indicator,ID,;,	int,ID,(,void,),{,},$,	reduce6	goto:5
+5	0,5,	$,variable-definition,	int,ID,(,void,),{,},$,	reduce4	goto:3
+6	0,3,	$,definition,	int,ID,(,void,),{,},$,	reduce3	goto:2
+7	0,2,	$,definition-list,	int,ID,(,void,),{,},$,	shift10
+8	0,2,10,	$,definition-list,int,	ID,(,void,),{,},$,	reduce8	goto:6
+9	0,2,6,	$,definition-list,type-indicator,	ID,(,void,),{,},$,	shift12
+10	0,2,6,12,	$,definition-list,type-indicator,ID,	(,void,),{,},$,	shift13
+11	0,2,6,12,13,	$,definition-list,type-indicator,ID,(,	void,),{,},$,	shift17
+12	0,2,6,12,13,17,	$,definition-list,type-indicator,ID,(,void,	),{,},$,	reduce14	goto:16
+13	0,2,6,12,13,16,	$,definition-list,type-indicator,ID,(,parameters,	),{,},$,	shift22
+14	0,2,6,12,13,16,22,	$,definition-list,type-indicator,ID,(,parameters,),	{,},$,	shift27
+15	0,2,6,12,13,16,22,27,	$,definition-list,type-indicator,ID,(,parameters,),{,	},$,	reduce21	goto:31
+16	0,2,6,12,13,16,22,27,31,	$,definition-list,type-indicator,ID,(,parameters,),{,local-definitions,	},$,	reduce23	goto:34
+17	0,2,6,12,13,16,22,27,31,34,	$,definition-list,type-indicator,ID,(,parameters,),{,local-definitions,statement-list,	},$,	shift38
+18	0,2,6,12,13,16,22,27,31,34,38,	$,definition-list,type-indicator,ID,(,parameters,),{,local-definitions,statement-list,},	$,	reduce19	goto:26
+19	0,2,6,12,13,16,22,26,	$,definition-list,type-indicator,ID,(,parameters,),compound-stmt,	$,	reduce12	goto:4
+20	0,2,4,	$,definition-list,function-definition,	$,	reduce5	goto:11
+21	0,2,11,	$,definition-list,definition,	$,	reduce2	goto:2
+22	0,2,	$,definition-list,	$,	reduce1	goto:1
+23	0,1,	$,program,	$,	Accept	goto:0
+
+
+
+# 定义变量
+int
+ID
+;
+
+# RES
+0	0,	$,	int,ID,;,$,	shift10
+1	0,10,	$,int,	ID,;,$,	reduce8	goto:6
+2	0,6,	$,type-indicator,	ID,;,$,	shift12
+3	0,6,12,	$,type-indicator,ID,	;,$,	shift15
+4	0,6,12,15,	$,type-indicator,ID,;,	$,	reduce6	goto:5
+5	0,5,	$,variable-definition,	$,	reduce4	goto:3
+6	0,3,	$,definition,	$,	reduce3	goto:2
+7	0,2,	$,definition-list,	$,	reduce1	goto:1
+8	0,1,	$,program,	$,	Accept	goto:0

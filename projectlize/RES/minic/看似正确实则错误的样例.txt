@@ -1,0 +1,21 @@
+int
+ID
+;
+ID
+(
+)
+;
+
+// 错误原因：文法中，，是使用的definition-list，然后转入到definition，所以，不存在直接接受ID的边，开头的一定是一个类型type-indicator,
+
+如果你要测试函数，
+你可以使用如下内容，定义一个函数体function-definition ->  type-indicator ID ( parameters ) compound-stmt,
+
+然后位于函数体的compound-stmt中可以存在compound-stmt ->  { local-definitions statement-list }
+
+在statement-list中statement-list ->  statement-list statement  |  @
+
+statement -> expression-stmt  |  compound-stmt  |  condition-stmt  | while-stmt  | dowhile-stmt  |  return-stmt
+因此，在此位置你就可以进行函数调用的测试了，
+
+不过，在此之前，我建议你线进行函数定义的操作，注意了，函数定义不允许左右括号内为空，最少也是void

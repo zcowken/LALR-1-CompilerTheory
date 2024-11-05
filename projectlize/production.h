@@ -41,6 +41,7 @@ public:
 
     // 所有的文法左部
     set<string> productionLefts;
+    set<string> VT;
 
     // 可以为空 的 文法左部
     set<string> NullAble;
@@ -73,7 +74,7 @@ public:
 
     /**
  * betas：文法右部分（分割后）
- * pos，当前走到右部的位置
+ * -废弃：pos，当前走到右部的位置
  * a，移进到当前文法的的文法的first集合
  * left，需要新的select集合的文法左部
  */

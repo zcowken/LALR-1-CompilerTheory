@@ -29,6 +29,23 @@ void testWith_tiny_re() {
 }
 
 
+void testWith_minic() {
+    algor alg;
+    alg.process("../matchTestFiles/minic_prod.txt",
+                "../matchTestFiles/minic_cont.txt");
+}
+
+void testWith_null() {
+    algor alg;
+    alg.process("../matchTestFiles/null_prod.txt",
+                "../matchTestFiles/null_cont.txt");
+}
+
+void testWith_null2() {
+    algor alg;
+    alg.process("../matchTestFiles/null2_prod.txt",
+                "../matchTestFiles/null2_cont.txt");
+}
 
 void testWith_temp() {
     algor alg;
@@ -39,6 +56,8 @@ void testWith_temp() {
 
 int main(int argc, char const *argv[]) {
 //    testWith_temp();
-    testWith_tiny_re();
+//    testWith_null();
+//    testWith_null2();
+    testWith_minic();
     return 0;
 }

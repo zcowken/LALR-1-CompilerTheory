@@ -5,7 +5,7 @@
 #include <string>
 #include <stack>
 #include <queue>
-
+#include <algorithm>
 using namespace std;
 #ifndef PROJECTLIZE_UTIL_H
 #define PROJECTLIZE_UTIL_H
@@ -13,42 +13,60 @@ using namespace std;
 
 class util {
 public:
-    static string stackToString(stack<string> s)
-    {
+    static string stackToString(stack<string> s, int reverse1 = false) {
         string res = "";
+        vector<string> v;
+        // 拷贝
         stack<string> t = stack<string>(s);
-        while(!t.empty())
-        {
+        while (!t.empty()) {
             string s_t = t.top();
             t.pop();
-            res = res + (s_t);
-            res+=",";
+            v.push_back(s_t);
         }
+        if(reverse1)
+        {
+            reverse(v.begin(),v.end());
+        }
+        for(const string& vi: v)
+        {
+            res = res + (vi);
+            res += ",";
+        }
+
         return res;
     }
-    static string stackToString(stack<int> s)
-    {
+
+    static string stackToString(stack<int> s, int reverse1 = false) {
         string res = "";
+        vector<string> v;
+        // 拷贝
         stack<int> t = stack<int>(s);
-        while(!t.empty())
-        {
-            int i = t.top();
+        while (!t.empty()) {
+            // int转字符串
+            string s_t = to_string(t.top());
             t.pop();
-            res = res + to_string(i);
-            res+=",";
+            v.push_back(s_t);
+        }
+        if(reverse1)
+        {
+            reverse(v.begin(),v.end());
+        }
+        for(const string& vi: v)
+        {
+            res = res + (vi);
+            res += ",";
         }
         return res;
     }
-    static string queueToString(queue<string> q)
-    {
+
+    static string queueToString(queue<string> q) {
         string res = "";
-        queue<string>t =queue<string>(q);
-        while(!t.empty())
-        {
+        queue<string> t = queue<string>(q);
+        while (!t.empty()) {
             string i = t.front();
             t.pop();
             res = res + i;
-            res+=",";
+            res += ",";
         }
         return res;
     }
